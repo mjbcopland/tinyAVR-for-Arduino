@@ -2,4 +2,4 @@
 
 Atmel tinyAVR microcontroller support for the [Arduino IDE](https://www.arduino.cc/en/Main/Software) using the [Micronucleus](https://github.com/micronucleus/micronucleus) bootloader.
 
-ATtiny44, ATtiny45, ATtiny84 and ATtiny85 are currently supported.
+ATtiny45, ATtiny84 and ATtiny85 are currently supported.
