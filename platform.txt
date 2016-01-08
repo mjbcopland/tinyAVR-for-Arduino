@@ -1,0 +1,9 @@
+name=Atmel tinyAVR
+
+tools.micronucleus.path={runtime.platform.path}/tools
+tools.micronucleus.cmd.path={path}/upload
+tools.micronucleus.config.path=
+
+tools.micronucleus.upload.params.verbose=
+tools.micronucleus.upload.params.quiet=
+tools.micronucleus.upload.pattern="{cmd.path}" --run --timeout 10 "{build.path}/{build.project_name}.hex"
