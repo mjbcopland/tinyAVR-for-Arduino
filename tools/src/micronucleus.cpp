@@ -116,7 +116,7 @@ int main(int argc, char **argv) {
 
   cout << prefix[0] << "Commandline tool version " << MICRONUCLEUS_COMMANDLINE_VERSION << endl
        << endl
-       << prefix[0] << "Please connect the device." << endl
+       << prefix[0] << "Please connect or reset the device now." << endl
        << prefix[0] << "Searching for device... ";
 
   time_t startTime, currentTime;
