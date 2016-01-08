@@ -1,0 +1,85 @@
+{
+  "packages": [
+    {
+      "name": "tinyavr",
+      "maintainer": "Michael Copland",
+      "websiteURL": "https://github.com/mjbcopland/tinyAVR-for-Arduino",
+      "email": "",
+      
+      "platforms": [
+        {
+          "name": "Atmel tinyAVR",
+          "architecture": "avr",
+          "version": "1.0.0",
+          "category": "Contributed",
+          "help": {
+            "online": ""
+          },
+          "url": "",
+          "archiveFileName": "tinyavr-for-arduino.zip",
+          "checksum": "SHA-256:",
+          "size": "",
+          "boards": [
+            {"name": "ATtiny45"},
+            {"name": "ATtiny84"},
+            {"name": "ATtiny85"}
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "avr-gcc",
+              "version": "4.8.1-arduino5"
+            },
+            {
+              "packager": "arduino",
+              "name": "avrdude",
+              "version": "6.0.1-arduino5"
+            },
+            {
+              "packager": "tinyavr",
+              "name": "micronucleus",
+              "version": "3.0"
+            }
+          ]
+        }
+      ],
+
+      "tools": [
+        {
+         "name": "micronucleus",
+         "version": "3.0",
+         "systems": [
+           {
+             "host": "x86_64-apple-darwin",
+             "archiveFileName": "micronucleus-osx.zip",
+             "url": "",
+             "checksum": "SHA-256:",
+             "size": ""
+           },
+           {
+             "host": "i686-mingw32",
+             "archiveFileName": "micronucleus-win.zip",
+             "url": "",
+             "checksum": "SHA-256:",
+             "size": ""
+           },
+           {
+             "host": "i686-linux-gnu",
+             "archiveFileName": "micronucleus-linux32.tar.gz",
+             "url": "",
+             "checksum": "SHA-256:",
+             "size": ""
+           },
+           {
+             "host": "x86_64-linux-gnu",
+             "archiveFileName": "micronucleus-linux64.tar.gz",
+             "url": "",
+             "checksum": "SHA-256:",
+             "size": ""
+           }
+         ]
+       }
+      ]
+    }
+  ]
+}
