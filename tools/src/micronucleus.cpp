@@ -25,7 +25,7 @@ static const char * const problemString = "Problem uploading to board.";
 
 // Intel HEX parsing helper function
 static unsigned char parseHex(FILE *input) {
-  char buf[3] = {(char)getc(input), (char)getc(input), 0};
+  char buf[3] = {getc(input), getc(input), 0};
   return strtol(buf, NULL, 16);
 }
 
