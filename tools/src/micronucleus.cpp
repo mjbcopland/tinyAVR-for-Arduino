@@ -2,17 +2,13 @@
 #include <iomanip>
 #include <ctime>
 #include <cstdio>
-// #include <stdbool.h>
-// #include <errno.h>
-// #include <string.h>
-// #include <stdlib.h>
-// #include <time.h>
+
 #include <micronucleus_util.h>
 #include <delay_util.h>
 
 using namespace std;
 
-typedef enum {INTEL_HEX, RAW} filetype_t;
+enum filetype_t {INTEL_HEX, RAW};
 
 #define CONNECT_WAIT 250 /* milliseconds to wait after detecting device on usb bus - probably excessive */
 
@@ -177,21 +173,22 @@ int main(int argc, char **argv) {
 
     switch (options.filetype) {
       case INTEL_HEX: {
-        while (true) {
+        unsigned char byteCount, address, recordType;
+
+        do {
           while (getc(input) != ':') continue;
 
-          unsigned char byteCount  = parseHex(input);
-          unsigned int  base       = (parseHex(input) << 8) | parseHex(input);
-          unsigned int  address    = base;
-          unsigned char recordType = parseHex(input);
-
-          unsigned char sum = byteCount + (address >> 8) + (address & 0xFF) + recordType;
+          unsigned char sum = 0;
+          
+          sum += (byteCount  = parseHex(input));
+          sum += (address = (parseHex(input) << 8) | parseHex(input));
+          sum += (recordType = parseHex(input));
 
           switch (recordType) {
             case 0x00: {
               // data
-              for (int i = 0; i < byteCount; i++) {
-                sum += (dataBuffer[address++] = parseHex(input));
+              for (unsigned int i = address; i < address + byteCount; i++) {
+                sum += (dataBuffer[i] = parseHex(input));
               }
             }
 
@@ -207,20 +204,19 @@ int main(int argc, char **argv) {
             }
           }
 
+          // add checksum
           sum += parseHex(input);
 
           if (sum != 0) {
             cout << hex << uppercase
-                 << prefix[0] << "Warning: Checksum error between address 0x" << base << " and 0x" << address << "." << endl
+                 << prefix[0] << "Warning: Checksum error between addresses 0x" << base << " and 0x" << address << "." << endl
                  << dec << nouppercase;
           }
 
-          if (startAddress > base) startAddress = base;
+          if (startAddress > address) startAddress = address;
+          if (endAddress < address + byteCount) endAddress = address + byteCount;
 
-          if (endAddress < address) endAddress = address;
-
-          if (recordType == 0x01) break; // end of file
-        }
+        } while (recordType != 0x01);
 
         break; // end case INTEL_HEX
       }

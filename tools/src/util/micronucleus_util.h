@@ -7,16 +7,12 @@
   #include <usb.h>        // this is libusb, see http://libusb.sourceforge.net/
 #endif
 
-// #include <assert.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-
 #define MICRONUCLEUS_VENDOR_ID   0x16D0
 #define MICRONUCLEUS_PRODUCT_ID  0x0753
 #define MICRONUCLEUS_USB_TIMEOUT 0xFFFF
 #define MICRONUCLEUS_MAX_MAJOR_VERSION 2
 
-#define MICRONUCLEUS_COMMANDLINE_VERSION "2.0b5"
+#define MICRONUCLEUS_COMMANDLINE_VERSION "3.0"
 
 struct MicronucleusVersion {
   unsigned char major, minor;
