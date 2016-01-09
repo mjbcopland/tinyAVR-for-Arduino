@@ -1,8 +1,6 @@
 name=Atmel tinyAVR
 
-tools.micronucleus.path={runtime.platform.path}/tools
-tools.micronucleus.cmd.path={path}/upload
-tools.micronucleus.config.path=
+tools.micronucleus.cmd.path={runtime.tools.micronucleus.path}/micronucleus
 
 tools.micronucleus.upload.params.verbose=
 tools.micronucleus.upload.params.quiet=
