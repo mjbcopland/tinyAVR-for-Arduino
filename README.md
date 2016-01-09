@@ -20,7 +20,7 @@ When first connecting a Micronucleus device, you will likely be asked to install
 
 #### Linux
 
-By default, most Linux distributions will not allow communication with unknown USB devices. To fix this, copy [`49-micronucleus.rules`](https://raw.githubusercontent.com/mjbcopland/tinyAVR-for-Arduino/master/tools/src/49-micronucleus.rules) to `/etc/udev/rules.d/`.
+By default, most Linux distributions will not allow communication with unknown USB devices. To fix this, copy [`49-micronucleus.rules`](https://github.com/mjbcopland/tinyAVR-for-Arduino/releases/download/1.0/49-micronucleus.rules) to `/etc/udev/rules.d/`.
 
 ## Usage
 
