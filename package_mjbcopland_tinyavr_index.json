@@ -38,7 +38,7 @@
             {
               "packager": "tinyavr",
               "name": "micronucleusplusplus",
-              "version": "3.0"
+              "version": "1.0"
             }
           ]
         }
@@ -47,7 +47,7 @@
       "tools": [
         {
          "name": "micronucleusplusplus",
-         "version": "3.0",
+         "version": "1.0",
          "systems": [
            {
              "host": "x86_64-apple-darwin",
