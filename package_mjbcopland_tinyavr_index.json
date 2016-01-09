@@ -17,8 +17,8 @@
           },
           "url": "https://github.com/mjbcopland/tinyAVR-for-Arduino/releases/download/1.0/tinyavr.zip",
           "archiveFileName": "tinyavr.zip",
-          "checksum": "SHA-256:9B3C16BA81CE1E5CF922B6A3CD5738EE483C7B6C1A7732CB9EEC5FA486077493",
-          "size": "123898",
+          "checksum": "SHA-256:E2E16B43FA7ED6FB1CBF2DF3A4CBCDA24C3B6FE14AF563CEB2003988A95BDF8B",
+          "size": "125154",
           "boards": [
             {"name": "ATtiny45"},
             {"name": "ATtiny84"},
@@ -50,11 +50,32 @@
          "version": "3.0",
          "systems": [
            {
+             "host": "x86_64-apple-darwin",
+             "archiveFileName": "micronucleus-osx.zip",
+             "url": "",
+             "checksum": "SHA-256:",
+             "size": ""
+           },
+           {
              "host": "i686-mingw32",
              "archiveFileName": "micronucleus-windows.zip",
              "url": "https://github.com/mjbcopland/tinyAVR-for-Arduino/releases/download/1.0/micronucleus-windows.zip",
              "checksum": "SHA-256:8D8E58DCD41916446E322D7103FD51C9B6F5228A6EF2B754CCCAD997A3101CAA",
              "size": "310928"
+           },
+           {
+             "host": "i686-linux-gnu",
+             "archiveFileName": "micronucleus-linux32.tar.gz",
+             "url": "",
+             "checksum": "SHA-256:",
+             "size": ""
+           },
+           {
+             "host": "x86_64-linux-gnu",
+             "archiveFileName": "micronucleus-linux64.tar.gz",
+             "url": "",
+             "checksum": "SHA-256:",
+             "size": ""
            }
          ]
        }
