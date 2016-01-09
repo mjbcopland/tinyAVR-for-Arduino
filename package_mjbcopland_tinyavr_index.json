@@ -17,7 +17,7 @@
           },
           "url": "https://github.com/mjbcopland/tinyAVR-for-Arduino/releases/download/1.0/tinyavr.zip",
           "archiveFileName": "tinyavr.zip",
-          "checksum": "SHA-256:F4EE380743705D2B473FE61DEE182A7BC67C198BB8A3B808F9071B7097D8F179",
+          "checksum": "SHA-256:A50DDE214A85716C81135C1A87EDB2A1A2B694076D3F4EDDE6E551F30BDE631A",
           "size": "124086",
           "boards": [
             {"name": "ATtiny45"},
