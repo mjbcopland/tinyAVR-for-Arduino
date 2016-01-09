@@ -10,7 +10,7 @@ t45.build.board=ATTINY45
 t45.build.core=arduino:arduino
 t45.build.variant=tiny8
 
-t45.upload.tool=micronucleus++
+t45.upload.tool=micronucleusplusplus
 t45.upload.protocol=usb
 t45.upload.maximum_size=2504
 t45.upload.maximum_data_size=256
@@ -33,7 +33,7 @@ t84.build.board=ATTINY84
 t84.build.core=arduino:arduino
 t84.build.variant=tiny14
 
-t84.upload.tool=micronucleus++
+t84.upload.tool=micronucleusplusplus
 t84.upload.protocol=usb
 t84.upload.maximum_size=6654
 t84.upload.maximum_data_size=512
@@ -55,7 +55,7 @@ t85.build.board=ATTINY85
 t85.build.core=arduino:arduino
 t85.build.variant=tiny8
 
-t85.upload.tool=micronucleus++
+t85.upload.tool=micronucleusplusplus
 t85.upload.protocol=usb
 t85.upload.maximum_data_size=512
 
