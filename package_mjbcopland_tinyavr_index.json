@@ -50,32 +50,11 @@
          "version": "3.0",
          "systems": [
            {
-             "host": "x86_64-apple-darwin",
-             "archiveFileName": "micronucleus-osx.zip",
-             "url": "",
-             "checksum": "SHA-256:",
-             "size": ""
-           },
-           {
              "host": "i686-mingw32",
              "archiveFileName": "micronucleus-windows.zip",
              "url": "https://github.com/mjbcopland/tinyAVR-for-Arduino/releases/download/1.0/micronucleus-windows.zip",
              "checksum": "SHA-256:8D8E58DCD41916446E322D7103FD51C9B6F5228A6EF2B754CCCAD997A3101CAA",
              "size": "310928"
-           },
-           {
-             "host": "i686-linux-gnu",
-             "archiveFileName": "micronucleus-linux32.tar.gz",
-             "url": "",
-             "checksum": "SHA-256:",
-             "size": ""
-           },
-           {
-             "host": "x86_64-linux-gnu",
-             "archiveFileName": "micronucleus-linux64.tar.gz",
-             "url": "",
-             "checksum": "SHA-256:",
-             "size": ""
            }
          ]
        }
