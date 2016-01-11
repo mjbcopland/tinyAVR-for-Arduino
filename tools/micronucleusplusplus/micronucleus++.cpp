@@ -193,7 +193,7 @@ int main(int argc, char **argv) {
             }
 
             case 0x01: {
-              // end of file -- will be handled later
+              // end of file -- will be handled by while loop
               break;
             }
 
