@@ -10,7 +10,6 @@ extern "C" {
   #include <usbdrv.h>
 }
 
-#include "usage_page.h"
 #include "ascii_keycode_table.h"
 
 
@@ -74,8 +73,8 @@ public:
 
     // TODO: Remove the next two lines once we fix
     //       missing first keystroke bug properly.
-    memset(reportBuffer, 0, sizeof(reportBuffer));      
-    usbSetInterrupt(reportBuffer, sizeof(reportBuffer));
+    // memset(reportBuffer, 0, sizeof(reportBuffer));      
+    // usbSetInterrupt(reportBuffer, sizeof(reportBuffer));
   }
   
   void update() {
@@ -88,14 +87,12 @@ public:
   }
   
   size_t write(uint8_t ch) {
+    if (ch & 0x80) return 0;
     uint8_t data = pgm_read_byte_near(ascii_to_keycode + ch);
     sendKeyStroke(data & 0x7F, (data & 0x80) ? RIGHT_SHIFT : 0);
-    sendKeyStroke(NULL);
+    sendKeyStroke(0);
     return 1;
   }
-    
-private:
-  unsigned char reportBuffer[2];
 
   void sendKeyStroke(uint8_t keyStroke) {
     sendKeyStroke(keyStroke, 0);
@@ -109,6 +106,9 @@ private:
 
     usbSetInterrupt(reportBuffer, sizeof(reportBuffer));
   }
+    
+private:
+  unsigned char reportBuffer[2];
 
   using Print::write;
 
