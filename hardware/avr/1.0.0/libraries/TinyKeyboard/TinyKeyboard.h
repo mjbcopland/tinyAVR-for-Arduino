@@ -202,7 +202,7 @@ public:
   }
     
 private:
-  unsigned char reportBuffer[2];
+  unsigned char reportBuffer[8];
 
   using Print::write;
 
@@ -241,12 +241,15 @@ USB_PUBLIC usbMsgLen_t usbFunctionSetup(uchar data[8]) {
 
         Keyboard.reportBuffer[0] = rq->wValue.bytes[0];
         memset(Keyboard.reportBuffer + 1, 0, sizeof(Keyboard.reportBuffer) - 1); // clear the report
+        
         // determine the return data length based on which report ID was requested
-        if (rq->wValue.bytes[0] == REPID_MOUSE)      return REPSIZE_MOUSE;
-        if (rq->wValue.bytes[0] == REPID_KEYBOARD)   return REPSIZE_KEYBOARD;
-        if (rq->wValue.bytes[0] == REPID_MMKEY)      return REPSIZE_MMKEY;
-        if (rq->wValue.bytes[0] == REPID_SYSCTRLKEY) return REPSIZE_SYSCTRLKEY;
-        return 8; // default
+        switch (rq->wValue.bytes[0]) {
+          case REPID_MOUSE:      return REPSIZE_MOUSE;
+          case REPID_KEYBOARD:   return REPSIZE_KEYBOARD;
+          case REPID_MMKEY:      return REPSIZE_MMKEY;
+          case REPID_SYSCTRLKEY: return REPSIZE_SYSCTRLKEY;
+          default:               return sizeof(Keyboard.reportBuffer);
+        }
       }
 
       case USBRQ_HID_SET_REPORT: {
