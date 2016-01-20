@@ -12,6 +12,7 @@ extern "C" {
 
 #include "ascii_keycode_table.h"
 
+#define MOUSE_NONE    0x00
 #define MOUSE_LEFT   _BV(0)
 #define MOUSE_RIGHT  _BV(1)
 #define MOUSE_MIDDLE _BV(2)
@@ -205,6 +206,17 @@ class TinyKeyboard : public Print {
       sendKeyStroke((KeyboardCode)(data & 0x7F), (data & 0x80) ? RIGHT_SHIFT : 0);
       sendKeyStroke(KC_NONE);
       return 1;
+    }
+
+    void moveMouse(signed char x, signed char y, uint8_t buttons) {
+      memset(reportBuffer, 0, sizeof(reportBuffer));
+
+      reportBuffer[0] = REPID_MOUSE;
+      reportBuffer[1] = buttons;
+      reportBuffer[2] = x;
+      reportBuffer[3] = y;
+
+      usbSendReport(REPSIZE_MOUSE);
     }
 
     void media(MediaCode keycode) {
