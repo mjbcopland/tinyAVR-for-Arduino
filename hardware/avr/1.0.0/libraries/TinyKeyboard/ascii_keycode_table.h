@@ -10,7 +10,7 @@
 #define SHIFT(keycode) (keycode | 0x80)
 
 const unsigned char ascii_to_keycode[] PROGMEM = {
-  /* ASCII   0: NUL   */ KC_NO,
+  /* ASCII   0: NUL   */ KC_NONE,
   /* ASCII   1: SOH   */ 0,
   /* ASCII   2: STX   */ 0,
   /* ASCII   3: ETX   */ 0,

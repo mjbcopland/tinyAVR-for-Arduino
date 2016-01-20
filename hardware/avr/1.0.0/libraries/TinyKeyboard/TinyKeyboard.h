@@ -12,6 +12,13 @@ extern "C" {
 
 #include "ascii_keycode_table.h"
 
+#define MOUSE_LEFT   _BV(0)
+#define MOUSE_RIGHT  _BV(1)
+#define MOUSE_MIDDLE _BV(2)
+
+#define LED_NUM    _BV(0)
+#define LED_CAPS   _BV(1)
+#define LED_SCROLL _BV(2)
 
 #define LEFT_CONTROL  _BV(0)
 #define LEFT_SHIFT    _BV(1)
@@ -22,6 +29,18 @@ extern "C" {
 #define RIGHT_ALT     _BV(6)
 #define RIGHT_GUI     _BV(7)
 
+#define REPID_MOUSE         1
+#define REPID_KEYBOARD      2
+#define REPID_MMKEY         3
+#define REPID_SYSCTRLKEY    4
+#define REPSIZE_MOUSE       4
+#define REPSIZE_KEYBOARD    8
+#define REPSIZE_MMKEY       3
+#define REPSIZE_SYSCTRLKEY  2
+
+typedef hid_generic_desktop_usage SystemCode;
+typedef hid_keyboard_keypad_usage KeyboardCode;
+typedef hid_consumer_usage        MediaCode;
 
 USB_PUBLIC usbMsgLen_t usbFunctionSetup(uchar data[8]);
 
@@ -144,8 +163,8 @@ const PROGMEM char usbHidReportDescriptor[USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH] 
   0x75, 0x02,             //   REPORT_SIZE (2)
   0x15, 0x01,             //   LOGICAL_MINIMUM (1)
   0x25, 0x03,             //   LOGICAL_MAXIMUM (3)
-  0x09, 0x82,             //   USAGE (System Sleep)
   0x09, 0x81,             //   USAGE (System Power)
+  0x09, 0x82,             //   USAGE (System Sleep)
   0x09, 0x83,             //   USAGE (System Wakeup)
   0x81, 0x60,             //   INPUT
   0x75, 0x06,             //   REPORT_SIZE (6)
@@ -158,51 +177,90 @@ static unsigned char protocol = 0;       // see HID1_11.pdf section 7.2.6
 static unsigned char ledState = 0;
 
 class TinyKeyboard : public Print {
-public:
-  TinyKeyboard() {
-    wdt_disable();
-    noInterrupts();
+  public:
+    TinyKeyboard() {
+      wdt_disable();
+      noInterrupts();
 
-    usbInit();
+      usbInit();
 
-    usbDeviceDisconnect();
-    _delay_ms(250);
-    usbDeviceConnect();
+      usbDeviceDisconnect();
+      _delay_ms(250);
+      usbDeviceConnect();
 
-    interrupts();
-  }
-  
-  void update() {
-    usbPoll();
-  }
-  
-  void delay(unsigned long ms) {
-    for (ms += millis(); millis() < ms; update());
-  }
-  
-  size_t write(uint8_t ch) {
-    if (ch & 0x80) return 0;
-    uint8_t data = pgm_read_byte_near(ascii_to_keycode + ch);
-    sendKeyStroke(data & 0x7F, (data & 0x80) ? RIGHT_SHIFT : 0);
-    sendKeyStroke(0);
-    return 1;
-  }
-
-  void sendKeyStroke(uint8_t keyStroke) {
-    sendKeyStroke(keyStroke, 0);
-  }
-
-  void sendKeyStroke(uint8_t keyStroke, uint8_t modifiers) {
-    while (!usbInterruptIsReady()) update();
+      interrupts();
+    }
     
-    reportBuffer[0] = modifiers;
-    reportBuffer[1] = keyStroke;
-
-    usbSetInterrupt(reportBuffer, sizeof(reportBuffer));
-  }
+    void update() {
+      usbPoll();
+    }
     
-private:
-  unsigned char reportBuffer[8];
+    void delay(unsigned long ms) {
+      for (ms += millis(); millis() < ms; update());
+    }
+    
+    size_t write(uint8_t ch) {
+      if (ch & 0x80) return 0;
+      uint8_t data = pgm_read_byte_near(ascii_to_keycode + ch);
+      sendKeyStroke((KeyboardCode)(data & 0x7F), (data & 0x80) ? RIGHT_SHIFT : 0);
+      sendKeyStroke(KC_NONE);
+      return 1;
+    }
+
+    void media(MediaCode keycode) {
+      sendKeyStroke(keycode);
+      sendKeyStroke((MediaCode)0);
+    }
+
+    void system(SystemCode keycode) {
+      sendKeyStroke(keycode);
+      sendKeyStroke((SystemCode)0);
+    }
+
+    void sendKeyStroke(KeyboardCode keycode) {
+      sendKeyStroke(keycode, 0);
+    }
+
+    void sendKeyStroke(KeyboardCode keycode, uint8_t modifiers) {
+      memset(reportBuffer, 0, sizeof(reportBuffer));
+
+      reportBuffer[0] = REPID_KEYBOARD;
+      reportBuffer[1] = modifiers;
+      // reportBuffer[2] is reserved
+      reportBuffer[3] = (unsigned char)keycode;
+
+      usbSendReport(REPSIZE_KEYBOARD);
+    }
+    
+    void sendKeyStroke(MediaCode keycode) {
+      memset(reportBuffer, 0, sizeof(reportBuffer));
+
+      reportBuffer[0] = REPID_MMKEY;
+      reportBuffer[1] = keycode;
+
+      usbSendReport(REPSIZE_MMKEY);
+    }
+
+    void sendKeyStroke(SystemCode keycode) {
+      memset(reportBuffer, 0, sizeof(reportBuffer));
+
+      reportBuffer[0] = REPID_SYSCTRLKEY;
+      reportBuffer[1] = keycode;
+
+      usbSendReport(REPSIZE_MMKEY);
+    }
+
+    unsigned char getLEDs() {
+      return ledState;
+    }
+
+  private:
+    unsigned char reportBuffer[8];
+
+    void usbSendReport(uint8_t size) {
+      while (!usbInterruptIsReady()) update();
+      usbSetInterrupt(reportBuffer, size);
+    }
 
   using Print::write;
 
@@ -253,18 +311,15 @@ USB_PUBLIC usbMsgLen_t usbFunctionSetup(uchar data[8]) {
       }
 
       case USBRQ_HID_SET_REPORT: {
-        if (rq->wLength.word == 1) // check data is available
-        {
-          // 1 byte, we don't check report type (it can only be output or feature)
-          // we never implemented "feature" reports so it can't be feature
-          // so assume "output" reports
-          // this means set LED status
-          // since it's the only one in the descriptor
+        if (rq->wLength.word == 1) {
+          /* 1 byte, we don't check report type (it can only be output or feature)
+           * We never implemented "feature" reports so it can't be feature so
+           * assume "output" reports.
+           * This means set LED status since it's the only one in the descriptor.
+           */
           return USB_NO_MSG; // send nothing but call usbFunctionWrite
-        }
-        else // no data or do not understand data, ignore
-        {
-          return 0; // send nothing
+        } else {
+          return 0;
         }
       }
 
@@ -272,14 +327,13 @@ USB_PUBLIC usbMsgLen_t usbFunctionSetup(uchar data[8]) {
         /* no vendor specific requests implemented */
         return 0;
       }
-
-    if (rq->bRequest == USBRQ_HID_GET_REPORT) {
-      /* wValue: ReportType (highbyte), ReportID (lowbyte)
-         We only have one report type, so don't look at wValue */
-      usbMsgPtr = Keyboard.reportBuffer;
-      return sizeof(Keyboard.reportBuffer);
     }
   }
+}
+
+USB_PUBLIC usbMsgLen_t usbFunctionWrite(uchar *data, uchar len) {
+  ledState = *data;
+  return 1;
 }
 
 #endif // __TinyKeyboard_h__

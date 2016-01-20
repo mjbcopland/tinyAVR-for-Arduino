@@ -1,55 +1,12 @@
-/*
-Copyright 2011,2012 Jun Wako <wakojun@gmail.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+#ifndef __keycode_h__
+#define __keycode_h__
 
 /*
- * Keycodes based on HID Usage Keyboard/Keypad Page(0x07) plus special codes
- * http://www.usb.org/developers/devclass_docs/Hut1_12.pdf
+ * See http://www.usb.org/developers/hidpage/Hut1_12v2.pdf for more details
  */
-#ifndef KEYCODE_H
-#define KEYCODE_H
 
 
-#define IS_ERROR(code)           (KC_ROLL_OVER <= (code) && (code) <= KC_UNDEFINED)
-#define IS_ANY(code)             (KC_A         <= (code) && (code) <= 0xFF)
-#define IS_KEY(code)             (KC_A         <= (code) && (code) <= KC_EXSEL)
-#define IS_MOD(code)             (KC_LCTRL     <= (code) && (code) <= KC_RGUI)
-
-
-#define IS_SPECIAL(code)         ((0xA5 <= (code) && (code) <= 0xDF) || (0xE8 <= (code) && (code) <= 0xFF))
-#define IS_SYSTEM(code)          (KC_PWR       <= (code) && (code) <= KC_WAKE)
-#define IS_CONSUMER(code)        (KC_MUTE      <= (code) && (code) <= KC_WFAV)
-#define IS_FN(code)              (KC_FN0       <= (code) && (code) <= KC_FN31)
-#define IS_MOUSEKEY(code)        (KC_MS_UP     <= (code) && (code) <= KC_MS_ACCEL2)
-#define IS_MOUSEKEY_MOVE(code)   (KC_MS_UP     <= (code) && (code) <= KC_MS_RIGHT)
-#define IS_MOUSEKEY_BUTTON(code) (KC_MS_BTN1   <= (code) && (code) <= KC_MS_BTN5)
-#define IS_MOUSEKEY_WHEEL(code)  (KC_MS_WH_UP  <= (code) && (code) <= KC_MS_WH_RIGHT)
-#define IS_MOUSEKEY_ACCEL(code)  (KC_MS_ACCEL0 <= (code) && (code) <= KC_MS_ACCEL2)
-
-#define MOD_BIT(code)   (1<<MOD_INDEX(code))
-#define MOD_INDEX(code) ((code) & 0x07)
-#define FN_BIT(code)    (1<<FN_INDEX(code))
-#define FN_INDEX(code)  ((code) - KC_FN0)
-#define FN_MIN          KC_FN0
-#define FN_MAX          KC_FN31
-
-
-/*
- * Short names for ease of definition of keymap
- */
+/* Short names for ease of definition of keymap */
 #define KC_LCTL KC_LCTRL
 #define KC_RCTL KC_RCTRL
 #define KC_LSFT KC_LSHIFT
@@ -87,13 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KC_LSCR KC_LOCKING_SCROLL
 #define KC_ERAS KC_ALT_ERASE,
 #define KC_CLR  KC_CLEAR
-/* Japanese specific */
-#define KC_ZKHK KC_GRAVE
-#define KC_RO   KC_INT1
-#define KC_KANA KC_INT2
-#define KC_JYEN KC_INT3
-#define KC_HENK KC_INT4
-#define KC_MHEN KC_INT5
+
 /* Keypad */
 #define KC_P1   KC_KP_1
 #define KC_P2   KC_KP_2
@@ -113,6 +64,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KC_PPLS KC_KP_PLUS
 #define KC_PEQL KC_KP_EQUAL
 #define KC_PENT KC_KP_ENTER
+
+// BELOW ARE REMNANTS OF TMK KEYMAP
+// CURRENTLY NOT SUPPORTED IN TINYKEYBOARD
+#if 0
 /* Mousekey */
 #define KC_MS_U KC_MS_UP
 #define KC_MS_D KC_MS_DOWN
@@ -161,238 +116,267 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Transparent */
 #define KC_TRANSPARENT  1
 #define KC_TRNS KC_TRANSPARENT
-
-
-
-/* USB HID Keyboard/Keypad Usage(0x07) */
-enum hid_keyboard_keypad_usage {
-    KC_NO               = 0x00,
-    KC_ROLL_OVER,
-    KC_POST_FAIL,
-    KC_UNDEFINED,
-    KC_A,
-    KC_B,
-    KC_C,
-    KC_D,
-    KC_E,
-    KC_F,
-    KC_G,
-    KC_H,
-    KC_I,
-    KC_J,
-    KC_K,
-    KC_L,
-    KC_M,               /* 0x10 */
-    KC_N,
-    KC_O,
-    KC_P,
-    KC_Q,
-    KC_R,
-    KC_S,
-    KC_T,
-    KC_U,
-    KC_V,
-    KC_W,
-    KC_X,
-    KC_Y,
-    KC_Z,
-    KC_1,
-    KC_2,
-    KC_3,               /* 0x20 */
-    KC_4,
-    KC_5,
-    KC_6,
-    KC_7,
-    KC_8,
-    KC_9,
-    KC_0,
-    KC_ENTER,
-    KC_ESCAPE,
-    KC_BSPACE,
-    KC_TAB,
-    KC_SPACE,
-    KC_MINUS,
-    KC_EQUAL,
-    KC_LBRACKET,
-    KC_RBRACKET,        /* 0x30 */
-    KC_BSLASH,          /* \ (and |) */
-    KC_NONUS_HASH,      /* Non-US # and ~ (Typically near the Enter key) */
-    KC_SCOLON,          /* ; (and :) */
-    KC_QUOTE,           /* ' and " */
-    KC_GRAVE,           /* Grave accent and tilde */
-    KC_COMMA,           /* , and < */
-    KC_DOT,             /* . and > */
-    KC_SLASH,           /* / and ? */
-    KC_CAPSLOCK,
-    KC_F1,
-    KC_F2,
-    KC_F3,
-    KC_F4,
-    KC_F5,
-    KC_F6,
-    KC_F7,              /* 0x40 */
-    KC_F8,
-    KC_F9,
-    KC_F10,
-    KC_F11,
-    KC_F12,
-    KC_PSCREEN,
-    KC_SCROLLLOCK,
-    KC_PAUSE,
-    KC_INSERT,
-    KC_HOME,
-    KC_PGUP,
-    KC_DELETE,
-    KC_END,
-    KC_PGDOWN,
-    KC_RIGHT,
-    KC_LEFT,            /* 0x50 */
-    KC_DOWN,
-    KC_UP,
-    KC_NUMLOCK,
-    KC_KP_SLASH,
-    KC_KP_ASTERISK,
-    KC_KP_MINUS,
-    KC_KP_PLUS,
-    KC_KP_ENTER,
-    KC_KP_1,
-    KC_KP_2,
-    KC_KP_3,
-    KC_KP_4,
-    KC_KP_5,
-    KC_KP_6,
-    KC_KP_7,
-    KC_KP_8,            /* 0x60 */
-    KC_KP_9,
-    KC_KP_0,
-    KC_KP_DOT,
-    KC_NONUS_BSLASH,    /* Non-US \ and | (Typically near the Left-Shift key) */
-    KC_APPLICATION,
-    KC_POWER,
-    KC_KP_EQUAL,
-    KC_F13,
-    KC_F14,
-    KC_F15,
-    KC_F16,
-    KC_F17,
-    KC_F18,
-    KC_F19,
-    KC_F20,
-    KC_F21,             /* 0x70 */
-    KC_F22,
-    KC_F23,
-    KC_F24,
-    KC_EXECUTE,
-    KC_HELP,
-    KC_MENU,
-    KC_SELECT,
-    KC_STOP,
-    KC_AGAIN,
-    KC_UNDO,
-    KC_CUT,
-    KC_COPY,
-    KC_PASTE,
-    KC_FIND,
-    KC__MUTE,
-    KC__VOLUP,          /* 0x80 */
-    KC__VOLDOWN,
-    KC_LOCKING_CAPS,    /* locking Caps Lock */
-    KC_LOCKING_NUM,     /* locking Num Lock */
-    KC_LOCKING_SCROLL,  /* locking Scroll Lock */
-    KC_KP_COMMA,
-    KC_KP_EQUAL_AS400,  /* equal sign on AS/400 */
-    KC_INT1,
-    KC_INT2,
-    KC_INT3,
-    KC_INT4,
-    KC_INT5,
-    KC_INT6,
-    KC_INT7,
-    KC_INT8,
-    KC_INT9,
-    KC_LANG1,           /* 0x90 */
-    KC_LANG2,
-    KC_LANG3,
-    KC_LANG4,
-    KC_LANG5,
-    KC_LANG6,
-    KC_LANG7,
-    KC_LANG8,
-    KC_LANG9,
-    KC_ALT_ERASE,
-    KC_SYSREQ,
-    KC_CANCEL,
-    KC_CLEAR,
-    KC_PRIOR,
-    KC_RETURN,
-    KC_SEPARATOR,
-    KC_OUT,             /* 0xA0 */
-    KC_OPER,
-    KC_CLEAR_AGAIN,
-    KC_CRSEL,
-    KC_EXSEL,           /* 0xA4 */
-
-    /* NOTE: 0xA5-DF are used for internal special purpose */
-
-#if 0
-    /* NOTE: Following codes(0xB0-DD) are not used. Leave them for reference. */
-    KC_KP_00            = 0xB0,
-    KC_KP_000,
-    KC_THOUSANDS_SEPARATOR,
-    KC_DECIMAL_SEPARATOR,
-    KC_CURRENCY_UNIT,
-    KC_CURRENCY_SUB_UNIT,
-    KC_KP_LPAREN,
-    KC_KP_RPAREN,
-    KC_KP_LCBRACKET,    /* { */
-    KC_KP_RCBRACKET,    /* } */
-    KC_KP_TAB,
-    KC_KP_BSPACE,
-    KC_KP_A,
-    KC_KP_B,
-    KC_KP_C,
-    KC_KP_D,
-    KC_KP_E,            /* 0xC0 */
-    KC_KP_F,
-    KC_KP_XOR,
-    KC_KP_HAT,
-    KC_KP_PERC,
-    KC_KP_LT,
-    KC_KP_GT,
-    KC_KP_AND,
-    KC_KP_LAZYAND,
-    KC_KP_OR,
-    KC_KP_LAZYOR,
-    KC_KP_COLON,
-    KC_KP_HASH,
-    KC_KP_SPACE,
-    KC_KP_ATMARK,
-    KC_KP_EXCLAMATION,
-    KC_KP_MEM_STORE,    /* 0xD0 */
-    KC_KP_MEM_RECALL,
-    KC_KP_MEM_CLEAR,
-    KC_KP_MEM_ADD,
-    KC_KP_MEM_SUB,
-    KC_KP_MEM_MUL,
-    KC_KP_MEM_DIV,
-    KC_KP_PLUS_MINUS,
-    KC_KP_CLEAR,
-    KC_KP_CLEAR_ENTRY,
-    KC_KP_BINARY,
-    KC_KP_OCTAL,
-    KC_KP_DECIMAL,
-    KC_KP_HEXADECIMAL,  /* 0xDD */
 #endif
 
-    /* Modifiers */
-    KC_LCTRL            = 0xE0,
-    KC_LSHIFT,
-    KC_LALT,
-    KC_LGUI,
-    KC_RCTRL,
-    KC_RSHIFT,
-    KC_RALT,
-    KC_RGUI,
+/* USB HID Keyboard/Keypad Usage Page (0x07) */
+enum hid_keyboard_keypad_usage {
+  KC_NONE             = 0x00,
+  KC_ROLL_OVER,
+  KC_POST_FAIL,
+  KC_UNDEFINED,
+  KC_A,
+  KC_B,
+  KC_C,
+  KC_D,
+  KC_E,
+  KC_F,
+  KC_G,
+  KC_H,
+  KC_I,
+  KC_J,
+  KC_K,
+  KC_L,
+  KC_M,               /* 0x10 */
+  KC_N,
+  KC_O,
+  KC_P,
+  KC_Q,
+  KC_R,
+  KC_S,
+  KC_T,
+  KC_U,
+  KC_V,
+  KC_W,
+  KC_X,
+  KC_Y,
+  KC_Z,
+  KC_1,
+  KC_2,
+  KC_3,               /* 0x20 */
+  KC_4,
+  KC_5,
+  KC_6,
+  KC_7,
+  KC_8,
+  KC_9,
+  KC_0,
+  KC_ENTER,
+  KC_ESCAPE,
+  KC_BSPACE,
+  KC_TAB,
+  KC_SPACE,
+  KC_MINUS,
+  KC_EQUAL,
+  KC_LBRACKET,
+  KC_RBRACKET,        /* 0x30 */
+  KC_BSLASH,          /* \ (and |) */
+  KC_NONUS_HASH,      /* Non-US # and ~ (Typically near the Enter key) */
+  KC_SCOLON,          /* ; (and :) */
+  KC_QUOTE,           /* ' and " */
+  KC_GRAVE,           /* Grave accent and tilde */
+  KC_COMMA,           /* , and < */
+  KC_DOT,             /* . and > */
+  KC_SLASH,           /* / and ? */
+  KC_CAPSLOCK,
+  KC_F1,
+  KC_F2,
+  KC_F3,
+  KC_F4,
+  KC_F5,
+  KC_F6,
+  KC_F7,              /* 0x40 */
+  KC_F8,
+  KC_F9,
+  KC_F10,
+  KC_F11,
+  KC_F12,
+  KC_PSCREEN,
+  KC_SCROLLLOCK,
+  KC_PAUSE,
+  KC_INSERT,
+  KC_HOME,
+  KC_PGUP,
+  KC_DELETE,
+  KC_END,
+  KC_PGDOWN,
+  KC_RIGHT,
+  KC_LEFT,            /* 0x50 */
+  KC_DOWN,
+  KC_UP,
+  KC_NUMLOCK,
+  KC_KP_SLASH,
+  KC_KP_ASTERISK,
+  KC_KP_MINUS,
+  KC_KP_PLUS,
+  KC_KP_ENTER,
+  KC_KP_1,
+  KC_KP_2,
+  KC_KP_3,
+  KC_KP_4,
+  KC_KP_5,
+  KC_KP_6,
+  KC_KP_7,
+  KC_KP_8,            /* 0x60 */
+  KC_KP_9,
+  KC_KP_0,
+  KC_KP_DOT,
+  KC_NONUS_BSLASH,    /* Non-US \ and | (Typically near the Left-Shift key) */
+  KC_APPLICATION,
+  KC_POWER,
+  KC_KP_EQUAL,
+  KC_F13,
+  KC_F14,
+  KC_F15,
+  KC_F16,
+  KC_F17,
+  KC_F18,
+  KC_F19,
+  KC_F20,
+  KC_F21,             /* 0x70 */
+  KC_F22,
+  KC_F23,
+  KC_F24,
+  KC_EXECUTE,
+  KC_HELP,
+  KC_MENU,
+  KC_SELECT,
+  KC_STOP,
+  KC_AGAIN,
+  KC_UNDO,
+  KC_CUT,
+  KC_COPY,
+  KC_PASTE,
+  KC_FIND,
+  KC__MUTE,
+  KC__VOLUP,          /* 0x80 */
+  KC__VOLDOWN,
+  KC_LOCKING_CAPS,    /* locking Caps Lock */
+  KC_LOCKING_NUM,     /* locking Num Lock */
+  KC_LOCKING_SCROLL,  /* locking Scroll Lock */
+  KC_KP_COMMA,
+  KC_KP_EQUAL_AS400,  /* equal sign on AS/400 */
+  KC_INT1,
+  KC_INT2,
+  KC_INT3,
+  KC_INT4,
+  KC_INT5,
+  KC_INT6,
+  KC_INT7,
+  KC_INT8,
+  KC_INT9,
+  KC_LANG1,           /* 0x90 */
+  KC_LANG2,
+  KC_LANG3,
+  KC_LANG4,
+  KC_LANG5,
+  KC_LANG6,
+  KC_LANG7,
+  KC_LANG8,
+  KC_LANG9,
+  KC_ALT_ERASE,
+  KC_SYSREQ,
+  KC_CANCEL,
+  KC_CLEAR,
+  KC_PRIOR,
+  KC_RETURN,
+  KC_SEPARATOR,
+  KC_OUT,             /* 0xA0 */
+  KC_OPER,
+  KC_CLEAR_AGAIN,
+  KC_CRSEL,
+  KC_EXSEL,           /* 0xA4 */
+
+#if 0
+  /* NOTE: Following codes(0xB0-DD) are not used. Leave them for reference. */
+
+  /* A5-AF Reserved */
+
+  KC_KP_00            = 0xB0,
+  KC_KP_000,
+  KC_THOUSANDS_SEPARATOR,
+  KC_DECIMAL_SEPARATOR,
+  KC_CURRENCY_UNIT,
+  KC_CURRENCY_SUB_UNIT,
+  KC_KP_LPAREN,
+  KC_KP_RPAREN,
+  KC_KP_LCBRACKET,    /* { */
+  KC_KP_RCBRACKET,    /* } */
+  KC_KP_TAB,
+  KC_KP_BSPACE,
+  KC_KP_A,
+  KC_KP_B,
+  KC_KP_C,
+  KC_KP_D,
+  KC_KP_E,            /* 0xC0 */
+  KC_KP_F,
+  KC_KP_XOR,
+  KC_KP_HAT,
+  KC_KP_PERC,
+  KC_KP_LT,
+  KC_KP_GT,
+  KC_KP_AND,
+  KC_KP_LAZYAND,
+  KC_KP_OR,
+  KC_KP_LAZYOR,
+  KC_KP_COLON,
+  KC_KP_HASH,
+  KC_KP_SPACE,
+  KC_KP_ATMARK,
+  KC_KP_EXCLAMATION,
+  KC_KP_MEM_STORE,    /* 0xD0 */
+  KC_KP_MEM_RECALL,
+  KC_KP_MEM_CLEAR,
+  KC_KP_MEM_ADD,
+  KC_KP_MEM_SUB,
+  KC_KP_MEM_MUL,
+  KC_KP_MEM_DIV,
+  KC_KP_PLUS_MINUS,
+  KC_KP_CLEAR,
+  KC_KP_CLEAR_ENTRY,
+  KC_KP_BINARY,
+  KC_KP_OCTAL,
+  KC_KP_DECIMAL,
+  KC_KP_HEXADECIMAL,  /* 0xDD */
+
+  /* DE-DF Reserved */
+#endif
+
+  /* Modifiers */
+  KC_LCTRL            = 0xE0,
+  KC_LSHIFT,
+  KC_LALT,
+  KC_LGUI,
+  KC_RCTRL,
+  KC_RSHIFT,
+  KC_RALT,
+  KC_RGUI,
 };
 
-#endif /* KEYCODE_H */
+/* USB HID Consumer Usage Page (0x0C) */
+enum hid_consumer_usage {
+  NEXT          = 0xB5,
+  PREV,
+  STOP,
+  PLAY_PAUSE    = 0xCD,
+  VOLUME_MUTE   = 0xE2,
+  VOLUME_UP     = 0xE9,
+  VOLUME_DOWN,
+};
+
+/* USB HID Generic Desktop Usage Page (0x01) */
+enum hid_generic_desktop_usage {
+  /*
+  SYS_POWER = 0x81,
+  SYS_SLEEP,
+  SYS_WAKE,
+  SYS_CONTEXT_MENU,
+  SYS_MAIN_MENU,
+  SYS_APP_MENU,
+  */
+  SHUT_DOWN = 0x01,
+  SLEEP,
+  WAKE,
+};
+
+
+#endif // __keycode_h__
