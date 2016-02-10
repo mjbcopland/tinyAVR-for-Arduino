@@ -2,6 +2,8 @@
 
 Atmel tinyAVR microcontroller support (ATtiny45/84/85) for the [Arduino IDE (1.6.4+)](https://www.arduino.cc/en/Main/Software) using the [Micronucleus](https://github.com/micronucleus/micronucleus) bootloader.
 
+**NOTE: tinyAVR for Arduino has been tested on Windows but Linux and OSX are still under development. If using Linux or OSX, you will have to compile the Micronucleus++ uploader yourself as it is not currently included in the download for those operating systems.**
+
 ## Installation
 
 In the Arduino IDE's Preferences dialog, add the following URL to the Additional Boards Manager URLs:
